@@ -1,0 +1,19 @@
+
+.absolute{
+    position: relative;
+    margin-top: -100px;
+    justify-content: center;
+}
+
+.relative{
+    position: relative;
+    margin-top: 100px;
+}
+.myShadow{
+    text-shadow: 1px 1px 1px rgb(112,112,112);
+}
+
+.adjusting{
+    position: relative;
+     bottom : 8rem;
+}

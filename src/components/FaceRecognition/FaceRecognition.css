@@ -1,0 +1,32 @@
+.relative {
+    position: relative;
+}
+.absolutee{
+    position: relative;
+    margin-top: -250px;
+   
+}
+.top{
+    display: flexbox;
+    justify-items: center;
+ 
+}
+
+.size{
+    width: auto;
+    height: 17rem;
+    margin-top: auto;
+    top: 1rem;
+    
+}
+
+
+
+.bounding-box{
+    position: absolute;
+    box-shadow: 0 0 0 3px rgba(81,206,208,0.5999533602503502) inset;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    cursor: pointer;
+}

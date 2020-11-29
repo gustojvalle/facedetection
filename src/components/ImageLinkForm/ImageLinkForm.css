@@ -1,0 +1,19 @@
+.form{
+    background: linear-gradient(90deg, rgba(238,174,202,1) 8%, rgba(81,206,208,0.5999533602503502) 91%);
+}
+
+
+.button-color{
+    background: rgba(81,206,208,0.5999533602503502);
+}
+
+.myShadowWhite{
+
+    text-shadow: 1px 1px 1px rgb(255,255,255);
+}
+
+.adjusting{
+    position: relative;
+    margin-top : 8rem;
+    margin-bottom: 0rem;
+}
