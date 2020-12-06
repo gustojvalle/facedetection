@@ -52,6 +52,7 @@ class App extends Component{
                   };
   }
 
+
   calculateFaceLocation = (data) => {
     const faces = data.outputs[0].data.regions.map(region => region.region_info.bounding_box);
     const final = faces.map((face) =>{ 
@@ -83,10 +84,10 @@ class App extends Component{
   }
 
   onRouteChange = (param) => {
-      if (param.route === 'signout'){
-        this.setState({"isSignedIn":false})
-      }else{
+      if (param === 'home'){
         this.setState({"isSignedIn":true})
+      }else{
+        this.setState({"isSignedIn":false})
       }
       this.setState({"route":param})
     
@@ -102,13 +103,13 @@ class App extends Component{
     <Navigation route={this.state.route} isSignedIn={this.state.isSignedIn} onRouteChange={this.onRouteChange} className = "App" style= {{display:'flex', justifyContent:'flex-end'}}/>
     { this.state.route ==='home'
       ? <div>
-      <Logo style = {{display:'flex', 'align-self': 'flex-start'}} />
-      <FaceRecognition  url = {this.state.url} boxes={this.state.boxes}/>
-      <Rank style = {{display:'flex', justifyContent: 'center', topPadding: "0px"}} />
-      <ImageLinkForm 
-      onClick={this.onClick} 
-      onInputChange = {this.onInputChange}/>
-  </div> 
+          <Logo style = {{display:'flex', 'align-self': 'flex-start'}} />
+          <FaceRecognition  url = {this.state.url} boxes={this.state.boxes}/>
+          <Rank style = {{display:'flex', justifyContent: 'center', topPadding: "0px"}} />
+          <ImageLinkForm 
+          onClick={this.onClick} 
+          onInputChange = {this.onInputChange}/>
+       </div> 
       :(this.state.route === "signin" 
       ?<SignIn onRouteChange={this.onRouteChange}/> 
       :<Register onRouteChange={this.onRouteChange} />)

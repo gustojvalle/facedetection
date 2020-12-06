@@ -26,5 +26,3 @@ const FaceRecognition  = ({boxes,url})  => {
 
 export default FaceRecognition; 
 
-// // style={{top: boxes[0].topRow, right:boxes[0].rightCol, bottom: boxes[0].bottomRow, left: boxes[0].leftCol}}
-// <div className="bounding-box" style={{top:`${boxes[0].topRow}px` , right: `${boxes[0].rightCol}px`, bottom: `${boxes[0].bottomRow}px`, left:`${boxes[0].leftCol}px`}}></div>   
