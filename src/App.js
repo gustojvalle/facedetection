@@ -5,7 +5,7 @@ import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/rank/Rank';
 import Particles from 'react-particles-js';
 import { Component } from 'react';
-import Clarifai from 'clarifai';
+
 import FaceRecognition from './components/FaceRecognition/FaceRecognition'
 import SignIn from "./components/SignIn/SignIn.js"
 import Register from "./components/Register/Register.js"
@@ -34,11 +34,20 @@ interactivity: {
 }
 
 
-//Setting upp the API to call 
-const app = new Clarifai.App({
-  apiKey: '9a747812debe41e3afb5bbb14aed1936'
- });
 
+const initialState = {"url": "",
+                      "input": "",
+                      "boxes":{},
+                      "route": 'signin',
+                      "isSignedIn":false, 
+                      user: {
+                        id: '', 
+                        name:'', 
+                        email:'', 
+                        entries: 0, 
+                        joined: '', 
+                      }, 
+}; 
 
 
 class App extends Component{
@@ -48,8 +57,26 @@ class App extends Component{
                   "input": "",
                   "boxes":{},
                   "route": 'signin',
-                  "isSignedIn":false
+                  "isSignedIn":false, 
+                  user: {
+                    id: '', 
+                    name:'', 
+                    email:'', 
+                    entries: 0, 
+                    joined: '', 
+                  }, 
                   };
+  }
+
+  loadUser = (data) => {
+    this.setState({user: {
+      id: data.id,
+      name: data.name, 
+      email: data.email, 
+      entries: data.entries, 
+      joined: data.joined,}  
+
+    })
   }
 
 
@@ -66,9 +93,7 @@ class App extends Component{
   }
 
   displayFaceBoxes = (boxes) => {
-    console.log(boxes)
     this.setState({"boxes":boxes}); 
-    console.log(this.state.boxes[0]);
     
   }
 
@@ -78,19 +103,38 @@ class App extends Component{
 
   onClick = () => {
     this.setState({"url": this.state.input});
-    app.models.predict(Clarifai.FACE_DETECT_MODEL,`${this.state.input}`,{maxConcepts:1})
-        .then(response => this.displayFaceBoxes(this.calculateFaceLocation(response)))
+      fetch('https://enigmatic-castle-90416.herokuapp.com/imageurl', {
+        method: 'post', 
+        headers:{'Content-Type': 'application/json'}, 
+        body: JSON.stringify({
+          input: this.state.url
+        })
+      })
+        .then(response => response.json())
+        .then(response => {
+          if (response){
+            fetch('https://enigmatic-castle-90416.herokuapp.com/image', {
+              method: 'put', 
+              headers:{'Content-Type': 'application/json'}, 
+              body: JSON.stringify({
+                id: this.state.user.id
+              })
+            }).then(response => response.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user,{entries: count} ))
+            }).catch(console.log)
+          }
+          this.displayFaceBoxes(this.calculateFaceLocation(response))})
         .catch(err => console.log(err));
   }
 
   onRouteChange = (param) => {
-      if (param === 'home'){
+      if (param === 'signout'){
+        this.setState(initialState)
+      }else if (param === 'home'){
         this.setState({"isSignedIn":true})
-      }else{
-        this.setState({"isSignedIn":false})
       }
-      this.setState({"route":param})
-    
+    this.setState({"route":param})
   }
 
   render(){
@@ -105,14 +149,20 @@ class App extends Component{
       ? <div>
           <Logo style = {{display:'flex', 'align-self': 'flex-start'}} />
           <FaceRecognition  url = {this.state.url} boxes={this.state.boxes}/>
-          <Rank style = {{display:'flex', justifyContent: 'center', topPadding: "0px"}} />
+          <Rank name = {this.state.user.name}
+          entries={this.state.user.entries} 
+          style = {{display:'flex', justifyContent: 'center', topPadding: "0px"}} />
           <ImageLinkForm 
           onClick={this.onClick} 
           onInputChange = {this.onInputChange}/>
        </div> 
       :(this.state.route === "signin" 
-      ?<SignIn onRouteChange={this.onRouteChange}/> 
-      :<Register onRouteChange={this.onRouteChange} />)
+      ?<SignIn 
+      loadUser = {this.loadUser}
+       onRouteChange={this.onRouteChange}/> 
+      :<Register onRouteChange={this.onRouteChange}
+      loadUser= {this.loadUser}
+      />)
        
     }
     </div>  

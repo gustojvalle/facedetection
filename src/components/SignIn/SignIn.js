@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './SignIn.css'
-
+//import axios from 'axios'
 
 
 class SignIn extends Component{
@@ -21,16 +21,26 @@ class SignIn extends Component{
     }
 
     onSubmitSignIn = () => {
-        fetch("http://192.168.56.1/8560/signin", {
-            method: 'post', 
-            headers: {'Content-Type': 'application/json'}, 
+
+        fetch("https://enigmatic-castle-90416.herokuapp.com/signin", {
+            method: 'POST', 
+            headers: {'Accept': 'application/json',
+                'Content-Type': 'application/json'}, 
             body: JSON.stringify({
                 email: this.state.signinEmail, 
-                password: this.state.signinPassword
-            })
+                password: this.state.signinPassword, 
+            }),
         })
-        this.props.onRouteChange('home');
+        .then(response => response.json())
+        .then(data => {
+            if (data[0].email === this.state.signinEmail){
+                this.props.loadUser(data[0]); 
+                this.props.onRouteChange('home')
+            }
+        })    
     }
+          
+    
 
 
     render(){
@@ -38,14 +48,14 @@ class SignIn extends Component{
       return(
         <article className="mw5 center transparent br3 pa3 pa4-ns mv3 ba b--black-10 shadow-2">
         <main className="pa4 black-80">
-            <form className="measure">
+            <div className="measure">
         <fieldset id="sign_up" 
         className="ba b--transparent ph0 mh0">
         <div className ="center">
             <legend className="tc f4 fw6 ph0 mh0">Sign In</legend>
         </div>
             <div className="mt3">
-                <label className="db fw6 lh-copy f6" form="email-address">Email</label>
+                <label className="db fw6 lh-copy f6" htmlFor="email-address">Email</label>
                 <input className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100"
                  type="email" 
                  name="email-address" 
@@ -56,7 +66,7 @@ class SignIn extends Component{
             <div className="mv3">
                 <label 
                 className="db fw6 lh-copy f6" 
-                form="password">Password</label>
+                htmlFor="password">Password</label>
                 <input className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
                 onChange = {this.onPasswordChange}
                 type="password" 
@@ -74,7 +84,7 @@ class SignIn extends Component{
         <div className="lh-copy mt3">
             <p onClick={() => onRouteChange('register')} href="#0" className="f6 pointer link dim black db">Register</p>
         </div>
-            </form>
+            </div>
         </main>
         </article>
 

@@ -3,15 +3,15 @@ import './Rank.css'
 
 
 
-const Rank  = ()  => {
+const Rank  = ({name, entries})  => {
     return(
         <div className="absolute">
             <div className="relative">
                 <div className='myShadow white f3'>
-                    {'Joe your current rank is:' }
+                    {`${name}, your current entry count is:` }
                 </div>
                 <div className='myShadow white f2 '>
-                    {'#5' }
+                    {entries}
                 </div>
             </div>
         </div>
